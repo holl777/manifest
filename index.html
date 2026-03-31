@@ -495,6 +495,12 @@ let sessionSeconds = 0;
 let addingNew = false;
 
 // FIREBASE CONFIG - placeholder
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCD7e6OKtD71KGKX3CY5Pteue-Bpn0ou3U",
   authDomain: "manifest-app-5ffd1.firebaseapp.com",
@@ -503,6 +509,9 @@ const firebaseConfig = {
   messagingSenderId: "593238129904",
   appId: "1:593238129904:web:447a8be6214f1534161635"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // LocalStorage fallback (works without Firebase config)
 function saveLocal(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
