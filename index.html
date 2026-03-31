@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANIFEST — Champ de Conscience</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A0;
+    --gold-dark: #8B6914;
+    --deep: #0D0B18;
+    --surface: #13101F;
+    --card: #1A1628;
+    --border: rgba(201,168,76,0.2);
+    --text: #EDE8DC;
+    --text-muted: rgba(237,232,220,0.5);
+    --violet: #7B5EA7;
+    --violet-light: #A387CC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--deep);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(123,94,167,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  }
+
+  .app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 16px 40px; }
+
+  /* AUTH */
+  .auth-screen {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+
+  .logo-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 300;
+    letter-spacing: 12px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .logo-sub {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 48px; text-align: center;
+  }
+
+  .auth-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    width: 100%; max-width: 360px;
+  }
+
+  .auth-tabs {
+    display: flex; gap: 0; margin-bottom: 28px;
+    border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden;
+  }
+
+  .auth-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-size: 13px; letter-spacing: 1px; cursor: pointer;
+    color: var(--text-muted); border: none; background: transparent;
+    transition: all 0.2s;
+  }
+
+  .auth-tab.active {
+    background: rgba(201,168,76,0.15); color: var(--gold);
+  }
+
+  .field-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px; display: block;
+  }
+
+  .field-input {
+    width: 100%; padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Jost', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+
+  .field-input:focus { border-color: var(--gold); }
+
+  .btn-primary {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none; border-radius: 8px;
+    color: var(--deep); font-family: 'Jost', sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+
+  .error-msg {
+    font-size: 12px; color: #E24B4A; text-align: center;
+    margin-top: 12px; min-height: 16px;
+  }
+
+  /* NAV */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0 16px;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .app-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; letter-spacing: 6px; color: var(--gold);
+  }
+
+  .user-info { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; }
+
+  .logout-btn {
+    background: none; border: 0.5px solid var(--border);
+    color: var(--text-muted); font-size: 11px; letter-spacing: 1px;
+    padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* TABS */
+  .nav-tabs {
+    display: flex; gap: 4px; margin-bottom: 24px;
+    background: var(--card); border-radius: 10px; padding: 4px;
+    border: 0.5px solid var(--border);
+  }
+
+  .nav-tab {
+    flex: 1; padding: 9px 4px; text-align: center;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-muted); border: none; background: transparent;
+    border-radius: 7px; cursor: pointer; transition: all 0.2s;
+  }
+
+  .nav-tab.active {
+    background: rgba(201,168,76,0.18); color: var(--gold);
+  }
+
+  /* MANIFESTATIONS LIST */
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300;
+    color: var(--text); margin-bottom: 16px; letter-spacing: 2px;
+  }
+
+  .manifestion-card {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 18px 20px; margin-bottom: 12px;
+    cursor: pointer; transition: all 0.25s; position: relative;
+    overflow: hidden;
+  }
+
+  .manifestion-card:hover { border-color: var(--gold); }
+
+  .manifestion-card.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  .manifest-title { font-size: 16px; font-weight: 400; margin-bottom: 6px; }
+
+  .manifest-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;
+  }
+
+  .manifest-time {
+    color: var(--gold); font-size: 12px; font-weight: 500;
+  }
+
+  .add-manifest-form {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-bottom: 20px;
+  }
+
+  .textarea-field {
+    width: 100%; padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Jost', sans-serif; font-size: 14px;
+    outline: none; resize: none; min-height: 80px;
+    margin-bottom: 12px; transition: border-color 0.2s;
+  }
+
+  .textarea-field:focus { border-color: var(--gold); }
+
+  .btn-secondary {
+    padding: 10px 20px;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 8px; color: var(--text-muted);
+    font-family: 'Jost', sans-serif; font-size: 12px;
+    letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  .btn-add {
+    padding: 10px 24px;
+    background: rgba(201,168,76,0.15);
+    border: 0.5px solid var(--gold);
+    border-radius: 8px; color: var(--gold);
+    font-family: 'Jost', sans-serif; font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-add:hover { background: rgba(201,168,76,0.25); }
+
+  /* TIMER SCREEN */
+  .timer-screen { text-align: center; }
+
+  .selected-manifest-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 300; font-style: italic;
+    color: var(--gold-light); margin-bottom: 8px; letter-spacing: 1px;
+    padding: 0 16px;
+  }
+
+  .duration-selector {
+    display: flex; justify-content: center; gap: 12px;
+    margin: 20px 0;
+  }
+
+  .dur-btn {
+    padding: 10px 22px;
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px; color: var(--text-muted);
+    font-family: 'Jost', sans-serif; font-size: 13px;
+    letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+  }
+
+  .dur-btn.active {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* CIRCLE TIMER */
+  .timer-wrap {
+    position: relative; width: 220px; height: 220px;
+    margin: 24px auto;
+  }
+
+  .timer-svg { transform: rotate(-90deg); }
+
+  .timer-bg-circle {
+    fill: none; stroke: rgba(201,168,76,0.1); stroke-width: 4;
+  }
+
+  .timer-progress {
+    fill: none; stroke: var(--gold); stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .timer-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .timer-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; font-weight: 300; color: var(--text);
+    line-height: 1; letter-spacing: 2px;
+  }
+
+  .timer-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 6px;
+  }
+
+  .progress-bar-wrap {
+    height: 3px; background: rgba(201,168,76,0.1);
+    border-radius: 2px; margin: 0 20px 24px; overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%; background: var(--gold);
+    border-radius: 2px; transition: width 1s linear;
+  }
+
+  /* MESSAGE CARD */
+  .message-card {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 20px 24px; margin: 0 0 20px;
+    min-height: 90px; position: relative; overflow: hidden;
+  }
+
+  .message-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 300; font-style: italic;
+    color: var(--text); line-height: 1.6; letter-spacing: 0.5px;
+    opacity: 0;
+    animation: fadeMsg 0.8s forwards;
+  }
+
+  @keyframes fadeMsg {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); margin-bottom: 12px;
+    opacity: 0.6;
+  }
+
+  .timer-controls { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+
+  .ctrl-btn {
+    padding: 12px 32px;
+    border-radius: 8px; font-family: 'Jost', sans-serif;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .ctrl-btn.start {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none; color: var(--deep); font-weight: 500;
+  }
+
+  .ctrl-btn.pause {
+    background: rgba(201,168,76,0.12);
+    border: 0.5px solid var(--gold); color: var(--gold);
+  }
+
+  .ctrl-btn.stop {
+    background: transparent;
+    border: 0.5px solid var(--border); color: var(--text-muted);
+  }
+
+  .ctrl-btn:hover { opacity: 0.85; }
+
+  /* STATS */
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 16px;
+  }
+
+  .stat-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; color: var(--gold);
+  }
+
+  .stat-unit { font-size: 13px; color: var(--text-muted); margin-left: 4px; }
+
+  /* CELEBRATION */
+  .celebration-card {
+    background: linear-gradient(135deg, rgba(123,94,167,0.15), rgba(201,168,76,0.1));
+    border: 0.5px solid var(--gold);
+    border-radius: 16px; padding: 28px 24px; text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .celebration-icon {
+    font-size: 32px; margin-bottom: 12px;
+    filter: drop-shadow(0 0 12px rgba(201,168,76,0.4));
+  }
+
+  .celebration-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 300; line-height: 1.6;
+    color: var(--text); font-style: italic;
+  }
+
+  /* DELETE */
+  .delete-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; cursor: pointer;
+    font-size: 14px; color: rgba(226,75,74,0.4);
+    opacity: 0; transition: opacity 0.2s;
+    padding: 4px;
+  }
+
+  .manifestion-card:hover .delete-btn { opacity: 1; }
+  .delete-btn:hover { color: #E24B4A; }
+
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-muted); font-size: 14px; line-height: 1.8;
+  }
+
+  .empty-icon {
+    font-size: 36px; margin-bottom: 16px; opacity: 0.4;
+    display: block;
+  }
+
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .completed-banner {
+    background: rgba(201,168,76,0.12); border: 0.5px solid var(--gold);
+    border-radius: 10px; padding: 14px 18px; text-align: center;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 16px; color: var(--gold-light); margin-bottom: 16px;
+    animation: fadeMsg 0.6s forwards;
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<div id="root"></div>
+
+<script>
+const MESSAGES = [
+  "Ce que tu imagines avec clarté et ressens avec intensité prend forme dans ta réalité.",
+  "Tu es le créateur de ton univers. Chaque pensée plantée avec foi devient une graine de miracle.",
+  "L'univers conspire en ce moment même à réaliser ce que tu visualises.",
+  "Ta conscience est la force la plus puissante qui soit. Dirige-la avec amour.",
+  "Ce que tu gardes en premier plan de ton esprit, tu l'attires dans ta vie.",
+  "Tu mérites tout ce que tu désires. Reçois-le avec gratitude et confiance.",
+  "Tes rêves ne sont pas des illusions — ils sont des mémoires du futur qui t'attend.",
+  "Plus tu vibres haut, plus ce que tu désires se rapproche de toi à grande vitesse.",
+  "Chaque moment de focus est une prière que l'univers entend et exauce.",
+  "Tu n'attends pas que la vie change — tu ES le changement en train de se manifester.",
+  "Ressens déjà la joie de l'accomplissement. Le sentiment précède toujours la réalité.",
+  "Ta foi est ton super-pouvoir. Elle déplace des montagnes et transforme des rêves en faits.",
+  "L'énergie que tu portes en toi attire des situations de même fréquence.",
+  "Sois en paix avec où tu en es, et excité pour où tu vas.",
+  "Ta vision est réelle. Elle existe déjà dans le champ des possibilités infinies.",
+  "Tu es digne. Tu es prêt. Tu es en chemin. L'univers le sait.",
+  "Chaque respiration est une affirmation que la vie te soutient pleinement.",
+  "Ce moment de présence pure est le pont entre ton rêve et sa manifestation.",
+  "L'amour que tu as pour ce que tu crées amplifie sa force d'attraction.",
+  "Fais confiance au processus. Ce qui est pour toi ne peut pas te passer à côté.",
+  "Ton cœur et ton esprit alignés créent une force irrésistible.",
+  "Tu es dans le bon moment, au bon endroit, en train de faire exactement ce qu'il faut.",
+  "La persistance de ta vision est la preuve de sa réalité à venir.",
+  "Ressens la gratitude comme si c'était déjà là. Car dans un sens profond, ça l'est.",
+  "Chaque jour de focus est une couche de plus sur le chef-d'œuvre de ta vie.",
+  "Tu plantes des graines de lumière dans le sol de l'univers. Elles poussent.",
+  "Ta détermination silencieuse est plus puissante que n'importe quelle circonstance extérieure.",
+  "Ce que tu penses de toi-même, l'univers le confirme. Pense grandeur.",
+  "Le passage entre le désir et la réalité est toujours fait de foi et d'action alignée.",
+  "Tu es une force de nature. Ce que tu décides de créer se crée."
+];
+
+let db = null;
+let currentUser = null;
+let manifestations = [];
+let selectedManifest = null;
+let timerInterval = null;
+let messageInterval = null;
+let totalSeconds = 0;
+let remainingSeconds = 0;
+let selectedDuration = 5;
+let isRunning = false;
+let currentMsgIndex = 0;
+let currentTab = 'manifests';
+let sessionSeconds = 0;
+let addingNew = false;
+
+// FIREBASE CONFIG - placeholder
+const firebaseConfig = {
+  apiKey: "AIzaSyCD7e6OKtD71KGKX3CY5Pteue-Bpn0ou3U",
+  authDomain: "manifest-app-5ffd1.firebaseapp.com",
+  projectId: "manifest-app-5ffd1",
+  storageBucket: "manifest-app-5ffd1.firebasestorage.app",
+  messagingSenderId: "593238129904",
+  appId: "1:593238129904:web:447a8be6214f1534161635"
+};
+
+// LocalStorage fallback (works without Firebase config)
+function saveLocal(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
+function loadLocal(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+
+function getUserKey(suffix) { return `manifest_${currentUser}_${suffix}`; }
+
+function loadManifestations() {
+  const data = loadLocal(getUserKey('manifests'));
+  manifestations = data || [];
+}
+
+function saveManifestations() {
+  saveLocal(getUserKey('manifests'), manifestations);
+}
+
+function formatTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function formatDuration(secs) {
+  if (secs < 60) return `${secs}s`;
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  if (s === 0) return `${m} min`;
+  return `${m}m ${s}s`;
+}
+
+function getTotalToday() {
+  const today = new Date().toDateString();
+  const key = getUserKey(`day_${today}`);
+  return loadLocal(key) || 0;
+}
+
+function addToToday(secs) {
+  const today = new Date().toDateString();
+  const key = getUserKey(`day_${today}`);
+  const current = loadLocal(key) || 0;
+  saveLocal(key, current + secs);
+}
+
+function getDailyMessage(totalSecs) {
+  const mins = Math.floor(totalSecs / 60);
+  if (mins < 2) return null;
+  if (mins < 10) return { icon: "✨", msg: `${mins} minutes de focus aujourd'hui. Chaque moment compte. Tu as planté des graines de lumière.` };
+  if (mins < 20) return { icon: "🌟", msg: `${mins} minutes de conscience dirigée. Tu es en train de devenir la meilleure version de toi-même.` };
+  if (mins < 30) return { icon: "🔥", msg: `${mins} minutes de manifestation pure! Ton engagement est remarquable. L'univers l'a noté.` };
+  if (mins < 60) return { icon: "💫", msg: `${mins} minutes de création consciente aujourd'hui. Tu es une force de nature, Olivier. Continue.` };
+  return { icon: "👑", msg: `${mins} minutes! Tu as consacré plus d'une heure à la manifestation de tes rêves. C'est extraordinaire. Le cosmos est impressionné.` };
+}
+
+// RENDER
+function render() {
+  const root = document.getElementById('root');
+  if (!currentUser) {
+    root.innerHTML = renderAuth();
+  } else {
+    root.innerHTML = renderApp();
+    attachAppEvents();
+  }
+  attachAuthEvents();
+}
+
+function renderAuth() {
+  return `
+<div class="auth-screen">
+  <div class="logo-title">MANIFEST</div>
+  <div class="logo-sub">Champ de Conscience</div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Créer un compte</button>
+    </div>
+    <div id="auth-form-login">
+      <label class="field-label">Nom d'utilisateur</label>
+      <input class="field-input" id="login-user" placeholder="ton_nom" autocomplete="username">
+      <label class="field-label">Mot de passe</label>
+      <input class="field-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      <button class="btn-primary" onclick="doLogin()">Entrer dans le champ</button>
+    </div>
+    <div id="auth-form-register" style="display:none">
+      <label class="field-label">Nom d'utilisateur</label>
+      <input class="field-input" id="reg-user" placeholder="ton_nom" autocomplete="username">
+      <label class="field-label">Mot de passe</label>
+      <input class="field-input" id="reg-pass" type="password" placeholder="••••••••" autocomplete="new-password">
+      <label class="field-label">Confirmer</label>
+      <input class="field-input" id="reg-pass2" type="password" placeholder="••••••••" autocomplete="new-password">
+      <button class="btn-primary" onclick="doRegister()">Créer mon espace</button>
+    </div>
+    <div class="error-msg" id="auth-error"></div>
+  </div>
+</div>`;
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('auth-form-login').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('auth-form-register').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('auth-error').textContent = '';
+}
+
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!user || !pass) { document.getElementById('auth-error').textContent = 'Remplis tous les champs.'; return; }
+  const stored = loadLocal(`user_${user}`);
+  if (!stored || stored.password !== pass) {
+    document.getElementById('auth-error').textContent = 'Utilisateur ou mot de passe incorrect.';
+    return;
+  }
+  currentUser = user;
+  saveLocal('current_user', user);
+  loadManifestations();
+  render();
+}
+
+function doRegister() {
+  const user = document.getElementById('reg-user').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  if (!user || !pass || !pass2) { document.getElementById('auth-error').textContent = 'Remplis tous les champs.'; return; }
+  if (pass !== pass2) { document.getElementById('auth-error').textContent = 'Les mots de passe ne correspondent pas.'; return; }
+  if (pass.length < 4) { document.getElementById('auth-error').textContent = 'Mot de passe trop court (min. 4 car.)'; return; }
+  if (loadLocal(`user_${user}`)) { document.getElementById('auth-error').textContent = 'Cet utilisateur existe déjà.'; return; }
+  saveLocal(`user_${user}`, { password: pass, created: Date.now() });
+  currentUser = user;
+  saveLocal('current_user', user);
+  manifestations = [];
+  render();
+}
+
+function doLogout() {
+  stopTimer();
+  currentUser = null;
+  currentTab = 'manifests';
+  selectedManifest = null;
+  saveLocal('current_user', null);
+  render();
+}
+
+function renderApp() {
+  return `
+<div class="app">
+  <div class="top-bar">
+    <div class="app-name">MANIFEST</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="user-info">${currentUser}</div>
+      <button class="logout-btn" onclick="doLogout()">Quitter</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab ${currentTab==='manifests'?'active':''}" onclick="setTab('manifests')">Mes visions</button>
+    <button class="nav-tab ${currentTab==='focus'?'active':''}" onclick="setTab('focus')">Focus</button>
+    <button class="nav-tab ${currentTab==='stats'?'active':''}" onclick="setTab('stats')">Progression</button>
+  </div>
+
+  <div id="tab-content">
+    ${currentTab==='manifests' ? renderManifests() : ''}
+    ${currentTab==='focus' ? renderFocus() : ''}
+    ${currentTab==='stats' ? renderStats() : ''}
+  </div>
+</div>`;
+}
+
+function renderManifests() {
+  let html = `<div class="section-title">Mes visions</div>`;
+
+  if (addingNew) {
+    html += `
+<div class="add-manifest-form">
+  <label class="field-label">Titre de ta vision</label>
+  <input class="field-input" id="new-title" placeholder="Ex: Ma maison de rêve au bord de l'eau" maxlength="80">
+  <label class="field-label">Description (optionnel)</label>
+  <textarea class="textarea-field" id="new-desc" placeholder="Décris ce que tu ressens en imaginant que c'est déjà accompli..."></textarea>
+  <div style="display:flex;gap:10px;justify-content:flex-end">
+    <button class="btn-secondary" onclick="addingNew=false;render()">Annuler</button>
+    <button class="btn-add" onclick="addManifestation()">Ajouter</button>
+  </div>
+</div>`;
+  } else {
+    html += `<button class="btn-add" style="width:100%;margin-bottom:16px" onclick="addingNew=true;render()">+ Nouvelle vision</button>`;
+  }
+
+  if (manifestations.length === 0 && !addingNew) {
+    html += `
+<div class="empty-state">
+  <span class="empty-icon">✦</span>
+  Ajoute ta première vision.<br>
+  Ce sur quoi tu concentres ton attention se développe et prend forme.
+</div>`;
+  }
+
+  manifestations.forEach((m, i) => {
+    const totalSecs = m.totalSeconds || 0;
+    html += `
+<div class="manifestion-card ${selectedManifest===i?'selected':''}" onclick="selectManifest(${i})">
+  <button class="delete-btn" onclick="event.stopPropagation();deleteManifestation(${i})">✕</button>
+  <div class="manifest-title">${escapeHtml(m.title)}</div>
+  <div class="manifest-meta">
+    <span>Créée le ${new Date(m.created).toLocaleDateString('fr-CA')}</span>
+    <span class="manifest-time">⏱ ${formatDuration(totalSecs)}</span>
+  </div>
+</div>`;
+  });
+
+  if (manifestations.length > 0 && selectedManifest !== null) {
+    html += `<button class="btn-primary" style="margin-top:8px" onclick="setTab('focus')">Commencer le focus ▶</button>`;
+  }
+
+  return html;
+}
+
+function renderFocus() {
+  const manifest = selectedManifest !== null ? manifestations[selectedManifest] : null;
+  let html = `<div class="section-title">Session de focus</div>`;
+
+  if (!manifest) {
+    html += `<div class="empty-state"><span class="empty-icon">◎</span>Sélectionne d'abord une vision dans l'onglet "Mes visions" pour démarrer ton focus.</div>`;
+    return html;
+  }
+
+  html += `<div class="selected-manifest-title">${escapeHtml(manifest.title)}</div>`;
+
+  const CIRC = 2 * Math.PI * 90;
+  const progress = totalSeconds > 0 ? (1 - remainingSeconds / totalSeconds) : 0;
+  const offset = CIRC - progress * CIRC;
+
+  html += `
+<div class="duration-selector">
+  <button class="dur-btn ${!isRunning && selectedDuration===2?'active':''}" onclick="setDuration(2)">2 min</button>
+  <button class="dur-btn ${!isRunning && selectedDuration===5?'active':''}" onclick="setDuration(5)">5 min</button>
+  <button class="dur-btn ${!isRunning && selectedDuration===10?'active':''}" onclick="setDuration(10)">10 min</button>
+</div>
+
+<div class="timer-wrap">
+  <svg class="timer-svg" width="220" height="220" viewBox="0 0 220 220">
+    <circle class="timer-bg-circle" cx="110" cy="110" r="90"/>
+    <circle class="timer-progress" cx="110" cy="110" r="90"
+      stroke-dasharray="${CIRC}"
+      stroke-dashoffset="${offset}"
+      id="timer-arc"/>
+  </svg>
+  <div class="timer-center">
+    <div class="timer-display" id="timer-disp">${formatTime(remainingSeconds || selectedDuration*60)}</div>
+    <div class="timer-label">${isRunning ? 'en focus' : 'prêt'}</div>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="prog-fill" style="width:${Math.round(progress*100)}%"></div>
+</div>`;
+
+  if (isRunning) {
+    html += `
+<div class="message-card" id="msg-card">
+  <div class="message-dot"></div>
+  <div class="message-text" id="msg-text">${escapeHtml(MESSAGES[currentMsgIndex % MESSAGES.length])}</div>
+</div>
+<div class="timer-controls">
+  <button class="ctrl-btn pause" onclick="pauseTimer()">Pause</button>
+  <button class="ctrl-btn stop" onclick="stopTimer()">Arrêter</button>
+</div>`;
+  } else {
+    html += `
+<div class="timer-controls">
+  <button class="ctrl-btn start" onclick="startTimer()">Commencer</button>
+</div>`;
+  }
+
+  if (sessionSeconds > 0 && !isRunning) {
+    html += `<div class="completed-banner">Session de ${formatDuration(sessionSeconds)} complétée ✦</div>`;
+  }
+
+  return html;
+}
+
+function renderStats() {
+  const todaySecs = getTotalToday();
+  const totalAllTime = manifestations.reduce((acc, m) => acc + (m.totalSeconds||0), 0);
+  const celebration = getDailyMessage(todaySecs);
+
+  let html = `<div class="section-title">Ma progression</div>`;
+
+  if (celebration) {
+    html += `
+<div class="celebration-card">
+  <div class="celebration-icon">${celebration.icon}</div>
+  <div class="celebration-msg">${celebration.msg}</div>
+</div>`;
+  }
+
+  html += `
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Focus aujourd'hui</div>
+    <div class="stat-value">${Math.floor(todaySecs/60)}<span class="stat-unit">min</span></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total cumulé</div>
+    <div class="stat-value">${Math.floor(totalAllTime/60)}<span class="stat-unit">min</span></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Visions actives</div>
+    <div class="stat-value">${manifestations.length}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Sessions total</div>
+    <div class="stat-value">${manifestations.reduce((a,m)=>(a+(m.sessions||0)),0)}</div>
+  </div>
+</div>`;
+
+  if (manifestations.length > 0) {
+    html += `<div class="section-title" style="margin-top:8px">Par vision</div>`;
+    manifestations.forEach(m => {
+      const pct = totalAllTime > 0 ? Math.round(((m.totalSeconds||0)/totalAllTime)*100) : 0;
+      html += `
+<div class="stat-card" style="margin-bottom:10px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div style="font-size:14px">${escapeHtml(m.title)}</div>
+    <div class="manifest-time">${formatDuration(m.totalSeconds||0)}</div>
+  </div>
+  <div class="progress-bar-wrap" style="margin:0">
+    <div class="progress-bar-fill" style="width:${pct}%"></div>
+  </div>
+</div>`;
+    });
+  }
+
+  return html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  sessionSeconds = 0;
+  render();
+}
+
+function selectManifest(i) {
+  selectedManifest = i;
+  render();
+}
+
+function addManifestation() {
+  const title = document.getElementById('new-title').value.trim();
+  if (!title) return;
+  const desc = document.getElementById('new-desc').value.trim();
+  manifestations.push({ title, desc, created: Date.now(), totalSeconds: 0, sessions: 0 });
+  selectedManifest = manifestations.length - 1;
+  saveManifestations();
+  addingNew = false;
+  render();
+}
+
+function deleteManifestation(i) {
+  if (!confirm('Supprimer cette vision?')) return;
+  manifestations.splice(i, 1);
+  if (selectedManifest >= manifestations.length) selectedManifest = manifestations.length - 1;
+  if (manifestations.length === 0) selectedManifest = null;
+  saveManifestations();
+  render();
+}
+
+function setDuration(min) {
+  if (isRunning) return;
+  selectedDuration = min;
+  totalSeconds = min * 60;
+  remainingSeconds = totalSeconds;
+  sessionSeconds = 0;
+  render();
+}
+
+function startTimer() {
+  if (selectedManifest === null) return;
+  if (remainingSeconds <= 0 || !totalSeconds) {
+    totalSeconds = selectedDuration * 60;
+    remainingSeconds = totalSeconds;
+  }
+  isRunning = true;
+  currentMsgIndex = Math.floor(Math.random() * MESSAGES.length);
+  render();
+  runTimer();
+  startMessages();
+  requestNotification();
+}
+
+function runTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!isRunning) { clearInterval(timerInterval); return; }
+    remainingSeconds--;
+    sessionSeconds++;
+
+    // Update arc & display without full re-render
+    const el = document.getElementById('timer-disp');
+    const arc = document.getElementById('timer-arc');
+    const prog = document.getElementById('prog-fill');
+    if (el) el.textContent = formatTime(remainingSeconds);
+    if (arc) {
+      const CIRC = 2 * Math.PI * 90;
+      const progress = 1 - remainingSeconds / totalSeconds;
+      arc.setAttribute('stroke-dashoffset', CIRC - progress * CIRC);
+    }
+    if (prog) prog.style.width = Math.round((1 - remainingSeconds/totalSeconds)*100) + '%';
+
+    if (remainingSeconds <= 0) {
+      completeTimer();
+    }
+  }, 1000);
+}
+
+function startMessages() {
+  if (messageInterval) clearInterval(messageInterval);
+  const intervalMs = Math.min(selectedDuration * 60 * 1000 / 10, 30000);
+  messageInterval = setInterval(() => {
+    if (!isRunning) { clearInterval(messageInterval); return; }
+    currentMsgIndex = (currentMsgIndex + 1) % MESSAGES.length;
+    const msgEl = document.getElementById('msg-text');
+    if (msgEl) {
+      msgEl.style.animation = 'none';
+      msgEl.offsetHeight; // reflow
+      msgEl.style.animation = '';
+      msgEl.textContent = MESSAGES[currentMsgIndex];
+    }
+  }, intervalMs);
+}
+
+function pauseTimer() {
+  isRunning = false;
+  clearInterval(timerInterval);
+  clearInterval(messageInterval);
+  saveProgress();
+  sessionSeconds = 0;
+  render();
+}
+
+function stopTimer() {
+  const savedSession = sessionSeconds;
+  isRunning = false;
+  clearInterval(timerInterval);
+  clearInterval(messageInterval);
+  saveProgress();
+  remainingSeconds = totalSeconds;
+  sessionSeconds = savedSession;
+  render();
+}
+
+function completeTimer() {
+  const savedSession = sessionSeconds;
+  isRunning = false;
+  clearInterval(timerInterval);
+  clearInterval(messageInterval);
+  saveProgress();
+  remainingSeconds = 0;
+  sessionSeconds = savedSession;
+  notifyComplete();
+  render();
+}
+
+function saveProgress() {
+  if (sessionSeconds > 0 && selectedManifest !== null) {
+    manifestations[selectedManifest].totalSeconds = (manifestations[selectedManifest].totalSeconds || 0) + sessionSeconds;
+    manifestations[selectedManifest].sessions = (manifestations[selectedManifest].sessions || 0) + 1;
+    saveManifestations();
+    addToToday(sessionSeconds);
+  }
+}
+
+function requestNotification() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function notifyComplete() {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('MANIFEST — Session complétée', {
+      body: `${selectedDuration} minutes de focus accomplis. Tu manifestes ta réalité. ✦`,
+      icon: ''
+    });
+  }
+}
+
+function attachAuthEvents() {
+  const li = document.getElementById('login-pass');
+  if (li) li.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  const ri = document.getElementById('reg-pass2');
+  if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') doRegister(); });
+}
+
+function attachAppEvents() {}
+
+// INIT
+(function init() {
+  const saved = loadLocal('current_user');
+  if (saved && loadLocal(`user_${saved}`)) {
+    currentUser = saved;
+    loadManifestations();
+  }
+  totalSeconds = selectedDuration * 60;
+  remainingSeconds = totalSeconds;
+  render();
+})();
+
+// Daily message check
+setInterval(() => {
+  if (!currentUser || currentTab !== 'stats') return;
+  const todaySecs = getTotalToday();
+  const c = getDailyMessage(todaySecs);
+  const el = document.querySelector('.celebration-card .celebration-msg');
+  if (el && c) el.textContent = c.msg;
+}, 60000);
+</script>
+</body>
+</html>
